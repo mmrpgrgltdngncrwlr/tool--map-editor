@@ -9,6 +9,7 @@ Map editor for MRRD.
 For information about my TypeScript library and Build Tools, please visit:
 
 - https://github.com/ericchase-library/ts-library
+- https://github.com/ericchase-library/ts-templates-self-hosted-web-app
 
 ## Project Disclaimer
 

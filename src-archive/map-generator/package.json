@@ -1,0 +1,10 @@
+{
+  "type": "module",
+  "scripts": {
+    "start": "node ./main.js"
+  },
+  "dependencies": {
+    "random-seedable": "^1.0.8",
+    "simplex-noise": "^4.0.1"
+  }
+}
