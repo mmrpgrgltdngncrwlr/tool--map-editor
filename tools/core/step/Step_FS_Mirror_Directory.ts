@@ -12,10 +12,6 @@ import { Logger } from '../../core/Logger.js';
 
 /**
  * !! WARNING: This step can DELETE entire directories. Use with caution. !!
- *
- * @defaults
- * @param config.exclude_patterns `[]`
- * @param config.include_patterns `['*']`
  */
 export function Step_FS_Mirror_Directory(config: Config): Builder.Step {
   return new Class(config);
@@ -24,7 +20,8 @@ class Class implements Builder.Step {
   StepName = Step_FS_Mirror_Directory.name;
   channel = Logger(this.StepName).newChannel();
 
-  constructor(readonly config: Config) {
+  constructor(readonly config: Config) {}
+  async onStartUp(): Promise<void> {
     this.config.exclude_patterns ??= [];
     this.config.include_patterns ??= ['*'];
     this.config.from_path = NODE_PATH.join(this.config.from_path);
@@ -48,7 +45,7 @@ class Class implements Builder.Step {
       }
     }
     const set_from = await Async_BunPlatform_Glob_Scan_Ex(this.config.from_path, this.config.include_patterns ?? ['*'], this.config.exclude_patterns ?? []);
-    const set_to = await Async_BunPlatform_Glob_Scan_Ex(this.config.to_path, ['**/*'], this.config.exclude_patterns ?? []);
+    const set_to = await Async_BunPlatform_Glob_Scan_Ex(this.config.to_path, ['**'], this.config.exclude_patterns ?? []);
     // copy all files that are missing
     for (const path of set_from.difference(set_to)) {
       const from = NODE_PATH.join(this.config.from_path, path);
@@ -71,7 +68,7 @@ class Class implements Builder.Step {
       }
     }
     // remove all files that shouldn't be
-    for (const path of await Async_BunPlatform_Glob_Scan_Ex(this.config.to_path, ['**/*'], [...set_from, ...(this.config.exclude_patterns ?? [])])) {
+    for (const path of await Async_BunPlatform_Glob_Scan_Ex(this.config.to_path, ['**'], [...set_from, ...(this.config.exclude_patterns ?? [])])) {
       const to = NODE_PATH.join(this.config.to_path, path);
       if ((await Async_NodePlatform_File_Delete(to)).value === true) {
         FILESTATS.RemoveStats(to);
@@ -94,8 +91,10 @@ class Class implements Builder.Step {
   }
 }
 interface Config {
+  /** @default [] */
   exclude_patterns?: string[];
-  from_path: string;
+  /** @default ['*'] */
   include_patterns?: string[];
+  from_path: string;
   to_path: string;
 }

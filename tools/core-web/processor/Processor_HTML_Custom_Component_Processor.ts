@@ -2,8 +2,8 @@ import { BunPlatform_Glob_Match } from '../../../src/lib/ericchase/BunPlatform_G
 import { NODE_PATH } from '../../../src/lib/ericchase/NodePlatform.js';
 import { NodePlatform_PathObject_Relative_Class } from '../../../src/lib/ericchase/NodePlatform_PathObject_Relative_Class.js';
 import { Builder } from '../../core/Builder.js';
+import { HTML_UTIL } from '../../core/bundle/html-util/html-util.js';
 import { Logger } from '../../core/Logger.js';
-import { HTML_UTIL } from '../bundle/htmlutil.js';
 
 export function Processor_HTML_Custom_Component_Processor(): Builder.Processor {
   return new Class();
@@ -19,14 +19,14 @@ class Class implements Builder.Processor {
     let trigger_reprocess = false;
     for (const file of files) {
       const query = file.src_path;
-      if (BunPlatform_Glob_Match(query, Builder.Dir.Lib + '/' + 'components/**/*.html') === true) {
+      if (BunPlatform_Glob_Match(query, `${Builder.Dir.Lib}/components/**/*.html`) === true) {
         file.addProcessor(this, this.onProcess);
         this.component_map.set(NodePlatform_PathObject_Relative_Class(file.src_path).name, file);
         this.htmlfile_set.add(file);
         trigger_reprocess = true;
         continue;
       }
-      if (BunPlatform_Glob_Match(query, Builder.Dir.Src + '/' + '**/*.html') === true) {
+      if (BunPlatform_Glob_Match(query, `${Builder.Dir.Src}/**/*.html`) === true) {
         file.addProcessor(this, this.onProcess);
         this.htmlfile_set.add(file);
       }
@@ -41,13 +41,13 @@ class Class implements Builder.Processor {
     let trigger_reprocess = false;
     for (const file of files) {
       const query = file.src_path;
-      if (BunPlatform_Glob_Match(query, Builder.Dir.Lib + '/' + 'components/**/*.html') === true) {
+      if (BunPlatform_Glob_Match(query, `${Builder.Dir.Lib}/components/**/*.html`) === true) {
         this.component_map.delete(NodePlatform_PathObject_Relative_Class(file.src_path).name);
         this.htmlfile_set.delete(file);
         trigger_reprocess = true;
         continue;
       }
-      if (BunPlatform_Glob_Match(query, Builder.Dir.Src + '/' + '**/*.html') === true) {
+      if (BunPlatform_Glob_Match(query, `${Builder.Dir.Src}/**/*.html`) === true) {
         this.htmlfile_set.delete(file);
       }
     }

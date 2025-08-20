@@ -19,23 +19,35 @@ class Class implements Builder.Step {
       Step_FS_Mirror_Directory({
         from_path: NODE_PATH.join(this.config.from_path, 'server'),
         to_path: NODE_PATH.join(this.config.to_path, 'server'),
-        include_patterns: ['**/*'],
-        exclude_patterns: ['.git/**/*', 'node_modules/**/*', 'public/**/*'],
+        include_patterns: ['**'],
+        exclude_patterns: ['.git/**', 'node_modules/**', 'public/**'],
       }),
     ];
 
     for (const step of this.steps) {
-      await step.onStartUp?.();
+      try {
+        await step.onStartUp?.();
+      } catch (error) {
+        this.channel.error(error, `Unhandled exception in "${step.StepName}" onStartUp:`);
+      }
     }
   }
   async onRun(): Promise<void> {
     for (const step of this.steps) {
-      await step.onRun?.();
+      try {
+        await step.onRun?.();
+      } catch (error) {
+        this.channel.error(error, `Unhandled exception in "${step.StepName}" onRun:`);
+      }
     }
   }
   async onCleanUp(): Promise<void> {
     for (const step of this.steps) {
-      await step.onCleanUp?.();
+      try {
+        await step.onCleanUp?.();
+      } catch (error) {
+        this.channel.error(error, `Unhandled exception in "${step.StepName}" onCleanUp:`);
+      }
     }
   }
 }

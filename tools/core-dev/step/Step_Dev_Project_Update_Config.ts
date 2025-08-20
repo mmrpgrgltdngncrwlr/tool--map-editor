@@ -3,7 +3,7 @@ import { Async_BunPlatform_File_Write_Text } from '../../../src/lib/ericchase/Bu
 import { Core_JSON_Merge } from '../../../src/lib/ericchase/Core_JSON_Merge.js';
 import { NODE_PATH } from '../../../src/lib/ericchase/NodePlatform.js';
 import { Builder } from '../../core/Builder.js';
-import { JSONC_Parse } from '../../core/bundle/jsonc-parser/parse.js';
+import { JSONC } from '../../core/bundle/jsonc-parse/jsonc-parse.js';
 import { Logger } from '../../core/Logger.js';
 
 export function Step_Dev_Project_Update_Config(config: Config): Builder.Step {
@@ -13,7 +13,7 @@ class Class implements Builder.Step {
   StepName = Step_Dev_Project_Update_Config.name;
   channel = Logger(this.StepName).newChannel();
 
-  constructor(public config: Config) {}
+  constructor(readonly config: Config) {}
   async onStartUp(): Promise<void> {}
   async onRun(): Promise<void> {
     // JSON-based Configs
@@ -33,14 +33,14 @@ interface Config {
 }
 
 async function Async_MergeJSONConfigs(project_path: string, config_path: string) {
-  const base_config = JSONC_Parse((await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, Builder.Dir.Tools, 'base-config', config_path))).value ?? '{}');
-  const repo_config = JSONC_Parse((await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, 'repo-config', config_path))).value ?? '{}');
-  await Async_BunPlatform_File_Write_Text(NODE_PATH.join(project_path, config_path), JSON.stringify(Core_JSON_Merge(base_config, repo_config), null, 2));
+  const base_config = JSONC.parse((await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, Builder.Dir.Tools, 'base-config', config_path))).value ?? '{}');
+  const repo_config = JSONC.parse((await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, 'repo-config', config_path))).value ?? '{}');
+  await Async_BunPlatform_File_Write_Text(NODE_PATH.join(project_path, config_path), JSON.stringify(Core_JSON_Merge(base_config, repo_config), null, 2).trim() + '\n');
 }
 
 async function Async_MergeINIConfigs(project_path: string, config_path: string) {
-  const base_config = (await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, Builder.Dir.Tools, 'base-config', config_path))).value ?? '';
-  const repo_config = (await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, 'repo-config', config_path))).value ?? '';
+  const base_config = (await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, Builder.Dir.Tools, 'base-config', config_path))).value?.trim() ?? '';
+  const repo_config = (await Async_BunPlatform_File_Read_Text(NODE_PATH.join(project_path, 'repo-config', config_path))).value?.trim() ?? '';
   const separator = '\n\n## Project Specific\n\n';
-  await Async_BunPlatform_File_Write_Text(NODE_PATH.join(project_path, config_path), base_config.trim() + separator + repo_config.trim() + '\n');
+  await Async_BunPlatform_File_Write_Text(NODE_PATH.join(project_path, config_path), (base_config + separator + repo_config).trim() + '\n');
 }

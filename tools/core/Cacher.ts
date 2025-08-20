@@ -1,5 +1,4 @@
 import { Database } from 'bun:sqlite';
-import { default as xxhash } from 'xxhash-wasm';
 import { Async_BunPlatform_File_Read_Bytes } from '../../src/lib/ericchase/BunPlatform_File_Read_Bytes.js';
 import { Core_Console_Error } from '../../src/lib/ericchase/Core_Console_Error.js';
 import { Core_Promise_Orphan } from '../../src/lib/ericchase/Core_Promise_Orphan.js';
@@ -9,7 +8,6 @@ import { Async_NodePlatform_Path_Get_Stats } from '../../src/lib/ericchase/NodeP
 
 // constants
 
-const { h64Raw } = await xxhash();
 export const cachepath = NODE_PATH.join('cache');
 if ((await Async_NodePlatform_Directory_Create(cachepath, true)).value !== true) {
   throw 'Could not create cache database path.';
@@ -489,7 +487,7 @@ export class FILESTATS {
   static async GetHash(path: string): Promise<bigint> {
     const { error, value: bytes } = await Async_BunPlatform_File_Read_Bytes(path);
     if (bytes !== undefined) {
-      return h64Raw(bytes);
+      return Bun.hash.wyhash(bytes);
     }
     throw error;
   }
@@ -532,7 +530,7 @@ export function Cacher_Watch_Directory(
   let timer_id: Parameters<typeof clearTimeout>[0] = undefined;
   let abort = false;
 
-  const glob = new Bun.Glob('**/*');
+  const glob = new Bun.Glob('**');
 
   async function scan() {
     try {
@@ -560,7 +558,7 @@ export function Cacher_Watch_Directory(
         for (const record of query_results.data) {
           const record_path = record[FILESTATS_ID.PATH] as string;
           if (added_set.has(record_path)) {
-            // check for modication
+            // check for modification
             const { data: modified } = await FILESTATS.UpdateRecordIfModified(record);
             if (modified === true) {
               modified_set.add(record_path);
@@ -588,7 +586,7 @@ export function Cacher_Watch_Directory(
         scan_count = 0;
       } else {
         if (delay_ms < 10_000) {
-          if (scan_count++ >= 5) {
+          if (scan_count++ >= 10) {
             delay_ms += 250;
             scan_count = 0;
           }
