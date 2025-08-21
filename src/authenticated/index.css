@@ -2,6 +2,7 @@
   background-color: rgba(128, 128, 128, 0.5);
   position: absolute;
   border: 1px solid #444;
+  user-select: none;
 }
 
 .panelHeader {
@@ -9,7 +10,8 @@
   height: 20px;
   cursor: move;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .panelHeader button {

@@ -78,7 +78,7 @@ class FloatingPanel {
 
   static topZIndex = 1000;
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, title = '') {
     this.panel = document.createElement('div');
     this.panel.className = 'floatingPanel';
 
@@ -88,6 +88,7 @@ class FloatingPanel {
     this.header = document.createElement('div');
     this.header.className = 'panelHeader';
     this.header.style.width = `${width}px`;
+    this.header.textContent = title;
 
     this.minimizeButton = document.createElement('button');
     this.minimizeButton.textContent = '-';
@@ -140,5 +141,5 @@ class FloatingPanel {
   }
 }
 
-const panel = new FloatingPanel(300, 200);
-const panel2 = new FloatingPanel(300, 200);
+const panel = new FloatingPanel(300, 200, 'panel one');
+const panel2 = new FloatingPanel(200, 300, 'panel two');
