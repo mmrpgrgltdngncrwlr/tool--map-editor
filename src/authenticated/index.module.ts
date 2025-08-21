@@ -98,7 +98,7 @@ class FloatingPanel {
 
     this.content = document.createElement('div');
     this.content.className = 'panelContent';
-    this.content.style.height = `${height - 20}px`;
+    this.content.style.height = `${height - 25}px`;
     this.content.textContent = 'Panel content';
     this.panel.appendChild(this.content);
 
@@ -108,7 +108,7 @@ class FloatingPanel {
   }
 
   enableDragging() {
-    this.header.addEventListener('mousedown', (e) => {
+    this.panel.addEventListener('mousedown', (e) => {
       this.isDragging = true;
       this.offsetX = e.clientX - this.panel.offsetLeft;
       this.offsetY = e.clientY - this.panel.offsetTop;
@@ -135,7 +135,7 @@ class FloatingPanel {
       this.minimizeButton.textContent = '-';
     } else {
       this.content.style.display = 'none';
-      this.panel.style.height = '20px';
+      this.panel.style.height = '25px';
       this.minimizeButton.textContent = '+';
     }
   }

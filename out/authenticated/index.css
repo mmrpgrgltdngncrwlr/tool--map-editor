@@ -3,20 +3,20 @@
   position: absolute;
   border: 1px solid #444;
   user-select: none;
+  cursor: move;
 }
 
 .panelHeader {
   background-color: rgba(64, 64, 64, 0.75);
-  height: 20px;
-  cursor: move;
+  height: 25px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
 .panelHeader button {
-  width: 18px;
-  height: 18px;
+  width: 23px;
+  height: 23px;
   border: none;
   background: #888;
   color: white;
