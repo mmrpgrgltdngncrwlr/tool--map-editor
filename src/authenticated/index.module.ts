@@ -68,6 +68,10 @@ canvas.onclick = (ev) => {
 
 class FloatingPanel {
   panel: HTMLDivElement;
+  header: HTMLDivElement;
+  minimizeButton: HTMLButtonElement;
+  content: HTMLDivElement;
+
   isDragging = false;
   offsetX: number = 0;
   offsetY: number = 0;
@@ -81,13 +85,29 @@ class FloatingPanel {
     this.panel.style.width = `${width}px`;
     this.panel.style.height = `${height}px`;
 
+    this.header = document.createElement('div');
+    this.header.className = 'panelHeader';
+    this.header.style.width = `${width}px`;
+
+    this.minimizeButton = document.createElement('button');
+    this.minimizeButton.textContent = '-';
+    this.minimizeButton.onclick = () => this.minimize();
+    this.header.appendChild(this.minimizeButton);
+    this.panel.appendChild(this.header);
+
+    this.content = document.createElement('div');
+    this.content.className = 'panelContent';
+    this.content.style.height = `${height - 20}px`;
+    this.content.textContent = 'Panel content';
+    this.panel.appendChild(this.content);
+
     this.enableDragging();
 
     document.body.appendChild(this.panel);
   }
 
   enableDragging() {
-    this.panel.addEventListener('mousedown', (e) => {
+    this.header.addEventListener('mousedown', (e) => {
       this.isDragging = true;
       this.offsetX = e.clientX - this.panel.offsetLeft;
       this.offsetY = e.clientY - this.panel.offsetTop;
@@ -105,6 +125,18 @@ class FloatingPanel {
     document.addEventListener('mouseup', () => {
       this.isDragging = false;
     });
+  }
+
+  minimize() {
+    if (this.content.style.display === 'none') {
+      this.content.style.display = 'block';
+      this.panel.style.height = `${this.panel.offsetHeight + this.content.offsetHeight}px`;
+      this.minimizeButton.textContent = '-';
+    } else {
+      this.content.style.display = 'none';
+      this.panel.style.height = '20px';
+      this.minimizeButton.textContent = '+';
+    }
   }
 }
 

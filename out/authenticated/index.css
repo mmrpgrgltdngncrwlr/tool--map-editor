@@ -1,8 +1,28 @@
 .floatingPanel {
   background-color: rgba(128, 128, 128, 0.5);
-  color: black;
-  padding: 20px;
-  border-radius: 10px;
   position: absolute;
+  border: 1px solid #444;
+}
+
+.panelHeader {
+  background-color: rgba(64, 64, 64, 0.75);
+  height: 20px;
   cursor: move;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.panelHeader button {
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: #888;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.panelHeader button:hover {
+  background: #555;
 }
