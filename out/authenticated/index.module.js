@@ -85,6 +85,9 @@ class Class_WebPlatform_Node_Reference_Class {
 function WebPlatform_Node_Reference_Class(node) {
   return new Class_WebPlatform_Node_Reference_Class(node);
 }
+function WebPlatform_Node_QuerySelector(selector) {
+  return WebPlatform_Node_Reference_Class(document.querySelector(selector));
+}
 
 // src/lib/ClientMutex.ts
 var DATABASE_NAME = 'ClientMutex';
@@ -171,7 +174,7 @@ async function async_unpair() {
 var mapWidth = 8;
 var mapHeight = 8;
 var tileSize = 32;
-var canvas = document.getElementById('editorCanvas');
+var canvas = WebPlatform_Node_QuerySelector('#editorCanvas').as(HTMLCanvasElement);
 canvas.width = mapWidth * tileSize;
 canvas.height = mapHeight * tileSize;
 var ctx = canvas.getContext('2d');
@@ -197,5 +200,37 @@ canvas.onclick = (ev) => {
     grid.set(posKey, null);
     ctx.clearRect(snappedX, snappedY, tileSize, tileSize);
   }
-  console.log(snappedX, snappedY);
 };
+
+class FloatingPanel {
+  panel;
+  isDragging = false;
+  offsetX = 0;
+  offsetY = 0;
+  constructor(width, height) {
+    this.panel = document.createElement('div');
+    this.panel.id = 'floatingPanel';
+    this.panel.style.width = `${width}px`;
+    this.panel.style.height = `${height}px`;
+    this.enableDragging();
+    document.body.appendChild(this.panel);
+  }
+  enableDragging() {
+    this.panel.addEventListener('mousedown', (e) => {
+      this.isDragging = true;
+      this.offsetX = e.clientX - this.panel.offsetLeft;
+      this.offsetY = e.clientY - this.panel.offsetTop;
+      this.panel.style.zIndex = '1000';
+    });
+    document.addEventListener('mousemove', (e) => {
+      if (this.isDragging) {
+        this.panel.style.left = `${e.clientX - this.offsetX}px`;
+        this.panel.style.top = `${e.clientY - this.offsetY}px`;
+      }
+    });
+    document.addEventListener('mouseup', () => {
+      this.isDragging = false;
+    });
+  }
+}
+var panel = new FloatingPanel(300, 200);

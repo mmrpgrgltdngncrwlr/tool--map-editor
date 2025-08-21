@@ -1,6 +1,6 @@
 import { Core_Console_Error } from '../lib/ericchase/Core_Console_Error.js';
 import { Async_WebPlatform_DOM_ReadyState_Callback } from '../lib/ericchase/WebPlatform_DOM_ReadyState_Callback.js';
-import { WebPlatform_Node_Reference_Class } from '../lib/ericchase/WebPlatform_Node_Reference_Class.js';
+import { WebPlatform_Node_QuerySelector, WebPlatform_Node_Reference_Class } from '../lib/ericchase/WebPlatform_Node_Reference_Class.js';
 import { Async_MutexFetch, Async_UnpairAllClientsFromServer } from '../lib/TokenAPI.js';
 
 const button_unpair = WebPlatform_Node_Reference_Class(document.getElementById('unpair')).as(HTMLButtonElement);
@@ -34,7 +34,7 @@ const mapWidth = 8; // tiles
 const mapHeight = 8; // tiles
 const tileSize = 32; // pixels
 
-const canvas = document.getElementById('editorCanvas') as HTMLCanvasElement;
+const canvas = WebPlatform_Node_QuerySelector('#editorCanvas').as(HTMLCanvasElement);
 canvas.width = mapWidth * tileSize;
 canvas.height = mapHeight * tileSize;
 
@@ -64,5 +64,45 @@ canvas.onclick = (ev) => {
     grid.set(posKey, null);
     ctx.clearRect(snappedX, snappedY, tileSize, tileSize);
   }
-  console.log(snappedX, snappedY);
 };
+
+class FloatingPanel {
+  panel: HTMLDivElement;
+  isDragging = false;
+  offsetX: number = 0;
+  offsetY: number = 0;
+
+  constructor(width: number, height: number) {
+    this.panel = document.createElement('div');
+    this.panel.id = 'floatingPanel';
+
+    this.panel.style.width = `${width}px`;
+    this.panel.style.height = `${height}px`;
+
+    this.enableDragging();
+
+    document.body.appendChild(this.panel);
+  }
+
+  enableDragging() {
+    this.panel.addEventListener('mousedown', (e) => {
+      this.isDragging = true;
+      this.offsetX = e.clientX - this.panel.offsetLeft;
+      this.offsetY = e.clientY - this.panel.offsetTop;
+      this.panel.style.zIndex = '1000';
+    });
+
+    document.addEventListener('mousemove', (e) => {
+      if (this.isDragging) {
+        this.panel.style.left = `${e.clientX - this.offsetX}px`;
+        this.panel.style.top = `${e.clientY - this.offsetY}px`;
+      }
+    });
+
+    document.addEventListener('mouseup', () => {
+      this.isDragging = false;
+    });
+  }
+}
+
+const panel = new FloatingPanel(300, 200);
