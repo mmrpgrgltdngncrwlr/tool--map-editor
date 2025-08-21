@@ -72,9 +72,11 @@ class FloatingPanel {
   offsetX: number = 0;
   offsetY: number = 0;
 
+  static topZIndex = 1000;
+
   constructor(width: number, height: number) {
     this.panel = document.createElement('div');
-    this.panel.id = 'floatingPanel';
+    this.panel.className = 'floatingPanel';
 
     this.panel.style.width = `${width}px`;
     this.panel.style.height = `${height}px`;
@@ -89,7 +91,8 @@ class FloatingPanel {
       this.isDragging = true;
       this.offsetX = e.clientX - this.panel.offsetLeft;
       this.offsetY = e.clientY - this.panel.offsetTop;
-      this.panel.style.zIndex = '1000';
+
+      this.panel.style.zIndex = (FloatingPanel.topZIndex++).toString();
     });
 
     document.addEventListener('mousemove', (e) => {
@@ -106,3 +109,4 @@ class FloatingPanel {
 }
 
 const panel = new FloatingPanel(300, 200);
+const panel2 = new FloatingPanel(300, 200);
