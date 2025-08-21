@@ -1,40 +1,3 @@
-// src/lib/ericchase/Core_Console_Error.ts
-function Core_Console_Error(...items) {
-  console['error'](...items);
-}
-
-// src/lib/ericchase/WebPlatform_DOM_ReadyState_Callback.ts
-async function Async_WebPlatform_DOM_ReadyState_Callback(config) {
-  async function DOMContentLoaded() {
-    removeEventListener('DOMContentLoaded', DOMContentLoaded);
-    await config.DOMContentLoaded?.();
-  }
-  async function load() {
-    removeEventListener('load', load);
-    await config.load?.();
-  }
-  switch (document.readyState) {
-    case 'loading':
-      if (config.DOMContentLoaded !== undefined) {
-        addEventListener('DOMContentLoaded', DOMContentLoaded);
-      }
-      if (config.load !== undefined) {
-        addEventListener('load', load);
-      }
-      break;
-    case 'interactive':
-      await config.DOMContentLoaded?.();
-      if (config.load !== undefined) {
-        addEventListener('load', load);
-      }
-      break;
-    case 'complete':
-      await config.DOMContentLoaded?.();
-      await config.load?.();
-      break;
-  }
-}
-
 // src/lib/ericchase/WebPlatform_Node_Reference_Class.ts
 class Class_WebPlatform_Node_Reference_Class {
   node;
@@ -134,6 +97,11 @@ async function Async_AcquireClientMutex() {
   });
 }
 
+// src/lib/ericchase/Core_Console_Error.ts
+function Core_Console_Error(...items) {
+  console['error'](...items);
+}
+
 // src/lib/TokenAPI.ts
 async function Async_MutexFetch(request_fn, response_cb) {
   const { release } = await Async_AcquireClientMutex();
@@ -145,25 +113,18 @@ async function Async_UnpairAllClientsFromServer() {
     method: 'POST',
   });
 }
-
-// src/authenticated/index.module.ts
-var button_unpair = WebPlatform_Node_Reference_Class(document.getElementById('unpair')).as(HTMLButtonElement);
-await Async_WebPlatform_DOM_ReadyState_Callback({
-  async load() {
-    button_unpair.addEventListener('click', async_unpair);
-  },
-});
-async function async_unpair() {
+async function Async_UnpairAndReload() {
   try {
     await Async_MutexFetch(
       () => Async_UnpairAllClientsFromServer(),
       async (response) => {
         switch (response.status) {
           case 200:
-            window.location.href = '/';
+            window.location.reload();
             break;
           default:
             Core_Console_Error(await response.text());
+            break;
         }
       },
     );
@@ -171,6 +132,10 @@ async function async_unpair() {
     Core_Console_Error(error);
   }
 }
+
+// src/authenticated/index.module.ts
+var button_unpair = WebPlatform_Node_Reference_Class(document.getElementById('unpair')).as(HTMLButtonElement);
+button_unpair.addEventListener('click', Async_UnpairAndReload);
 var mapWidth = 8;
 var mapHeight = 8;
 var tileSize = 32;
