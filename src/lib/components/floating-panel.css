@@ -14,6 +14,7 @@ div.floating-panel > div#panel-header {
   cursor: move;
   display: flex;
   flex-direction: row;
+  gap: 0.0625em;
   height: 2rem;
   justify-content: space-between;
   padding-left: 0.5em;
@@ -41,7 +42,6 @@ div.floating-panel > div#panel-header > button:hover {
 div.floating-panel > div#panel-header > button#lock-panel {
   margin-left: auto;
 }
-
 div.floating-panel > div#panel-content {
   background-color: lightgray;
   cursor: move;

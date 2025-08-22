@@ -42,15 +42,15 @@ export class FloatingPanel {
     this.div_content = WebPlatform_Node_Reference_Class(div_panel.querySelector('div#panel-content')).as(HTMLDivElement);
     this.div_header = WebPlatform_Node_Reference_Class(div_panel.querySelector('div#panel-header')).as(HTMLDivElement);
 
-    this.button_lock.onclick = () => this.toggle_locked();
-    this.button_minimize.onclick = () => this.toggle_minimized();
-    this.div_panel.onmousedown = (event) => this.toggle_dragging(event);
+    this.button_lock.onclick = () => this.toggleLocked();
+    this.button_minimize.onclick = () => this.toggleMinimized();
+    this.div_panel.onmousedown = (event) => this.toggleDragging(event);
 
     this.div_panel.style.setProperty('left', this.offset_x + 'px');
     this.div_panel.style.setProperty('top', this.offset_y + 'px');
   }
 
-  toggle_dragging(event: MouseEvent) {
+  toggleDragging(event: MouseEvent) {
     if ((event.target !== this.div_content && event.target !== this.div_header) || this.is_locked) {
       return;
     }
@@ -93,18 +93,7 @@ export class FloatingPanel {
     document.addEventListener('mouseup', onmouseup);
   }
 
-  toggle_minimized() {
-    this.is_minimized = !this.is_minimized;
-    if (this.is_minimized === true) {
-      this.button_minimize.textContent = '+';
-      this.div_content.classList.add('hidden');
-    } else {
-      this.button_minimize.textContent = '-';
-      this.div_content.classList.remove('hidden');
-    }
-  }
-
-  toggle_locked() {
+  toggleLocked() {
     this.is_locked = !this.is_locked;
     if (this.is_locked === true) {
       this.button_lock.textContent = 'L';
@@ -114,6 +103,17 @@ export class FloatingPanel {
       this.button_lock.textContent = 'O';
       this.div_content.style.setProperty('cursor', 'default');
       this.div_header.style.setProperty('cursor', 'move');
+    }
+  }
+
+  toggleMinimized() {
+    this.is_minimized = !this.is_minimized;
+    if (this.is_minimized === true) {
+      this.button_minimize.textContent = '+';
+      this.div_content.classList.add('hidden');
+    } else {
+      this.button_minimize.textContent = '-';
+      this.div_content.classList.remove('hidden');
     }
   }
 }
