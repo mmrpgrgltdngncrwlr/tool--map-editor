@@ -19,16 +19,24 @@ if (BunPlatform_Argv_Includes('--dev')) {
   Builder.SetMode(Builder.MODE.DEV);
 }
 // Set the logging verbosity
-Builder.SetVerbosity(Builder.VERBOSITY._1_LOG);
+Builder.SetVerbosity(Builder.VERBOSITY._2_DEBUG);
 
 // These steps are run during the startup phase only.
 Builder.SetStartUpSteps(
   Step_Dev_Project_Update_Config({ project_path: '.' }),
   Step_Bun_Run({ cmd: ['bun', 'update', '--latest'], showlogs: false }),
   Step_Bun_Run({ cmd: ['bun', 'install'], showlogs: false }),
-  Step_FS_Clean_Directory(Builder.Dir.Out),
   //
 );
+
+// Keep the out directory intact unless doing a full build. Specifically, we
+// don't want to keep deleting "auth.db".
+if (Builder.GetMode() === Builder.MODE.BUILD) {
+  Builder.AddStartUpSteps(
+    Step_FS_Clean_Directory(Builder.Dir.Out),
+    //
+  );
+}
 
 // These steps are run before each processing phase.
 Builder.SetBeforeProcessingSteps(

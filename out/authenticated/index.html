@@ -6,10 +6,29 @@
     <title>Client</title>
     <link rel="stylesheet" href="./index.css" />
     <script src="./index.module.js" type="module"></script>
+
+    <link rel="stylesheet" href="../lib/components/floating-panel.css" />
   </head>
   <body>
     <div><button id="unpair">Unpair</button></div>
-
     <canvas id="editorCanvas"></canvas>
+    <div class="floating-panel">
+      <div id="panel-header">
+        <span>Title</span>
+        <button id="minimize-panel">-</button>
+      </div>
+      <div id="panel-content">
+        <span>Content</span>
+      </div>
+    </div>
+    <div class="floating-panel">
+      <div id="panel-header">
+        <span>Title</span>
+        <button id="minimize-panel">-</button>
+      </div>
+      <div id="panel-content">
+        <span>Content</span>
+      </div>
+    </div>
   </body>
 </html>

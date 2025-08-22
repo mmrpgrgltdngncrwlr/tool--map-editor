@@ -1,0 +1,51 @@
+div.floating-panel {
+  display: flex;
+  flex-direction: column;
+  outline: 0.0625rem solid black;
+  position: absolute;
+  width: 18rem;
+}
+div.floating-panel.disable-select {
+  user-select: none;
+}
+div.floating-panel > div#panel-header {
+  align-items: center;
+  background-color: gray;
+  cursor: move;
+  display: flex;
+  flex-direction: row;
+  height: 2rem;
+  justify-content: space-between;
+  padding-left: 0.5em;
+}
+div.floating-panel > div#panel-header * {
+  cursor: initial;
+}
+div.floating-panel > div#panel-header > span {
+  color: white;
+}
+div.floating-panel > div#panel-header > button {
+  background: darkgray;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+  width: 2rem;
+  height: 2rem;
+}
+div.floating-panel > div#panel-header > button:hover {
+  background: gray;
+}
+div.floating-panel > div#panel-content {
+  background-color: lightgray;
+  cursor: move;
+  height: 14rem;
+  padding: 0.5em;
+}
+div.floating-panel > div#panel-content.hidden {
+  display: none;
+}
+div.floating-panel > div#panel-content * {
+  cursor: initial;
+}
