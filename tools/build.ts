@@ -19,7 +19,7 @@ if (BunPlatform_Argv_Includes('--dev')) {
   Builder.SetMode(Builder.MODE.DEV);
 }
 // Set the logging verbosity
-Builder.SetVerbosity(Builder.VERBOSITY._2_DEBUG);
+Builder.SetVerbosity(Builder.VERBOSITY._1_LOG);
 
 // These steps are run during the startup phase only.
 Builder.SetStartUpSteps(
