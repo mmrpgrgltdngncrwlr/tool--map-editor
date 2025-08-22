@@ -8,11 +8,13 @@ export class FloatingPanel {
   static Base_Z_Index = 100;
   static Panel_Set = new Set<FloatingPanel>();
 
+  readonly button_lock: HTMLButtonElement;
   readonly button_minimize: HTMLButtonElement;
   readonly div_content: HTMLDivElement;
   readonly div_header: HTMLDivElement;
 
   id: number;
+  is_locked = false;
   is_minimized = false;
   offset_x = 0;
   offset_y = 0;
@@ -35,10 +37,12 @@ export class FloatingPanel {
       next_offset_y += 20;
     }
 
+    this.button_lock = WebPlatform_Node_Reference_Class(div_panel.querySelector('button#lock-panel')).as(HTMLButtonElement);
     this.button_minimize = WebPlatform_Node_Reference_Class(div_panel.querySelector('button#minimize-panel')).as(HTMLButtonElement);
     this.div_content = WebPlatform_Node_Reference_Class(div_panel.querySelector('div#panel-content')).as(HTMLDivElement);
     this.div_header = WebPlatform_Node_Reference_Class(div_panel.querySelector('div#panel-header')).as(HTMLDivElement);
 
+    this.button_lock.onclick = () => this.toggle_locked();
     this.button_minimize.onclick = () => this.toggle_minimized();
     this.div_panel.onmousedown = (event) => this.toggle_dragging(event);
 
@@ -47,7 +51,7 @@ export class FloatingPanel {
   }
 
   toggle_dragging(event: MouseEvent) {
-    if (event.target !== this.div_content && event.target !== this.div_header) {
+    if ((event.target !== this.div_content && event.target !== this.div_header) || this.is_locked) {
       return;
     }
 
@@ -97,6 +101,19 @@ export class FloatingPanel {
     } else {
       this.button_minimize.textContent = '-';
       this.div_content.classList.remove('hidden');
+    }
+  }
+
+  toggle_locked() {
+    this.is_locked = !this.is_locked;
+    if (this.is_locked === true) {
+      this.button_lock.textContent = 'L';
+      this.div_content.style.setProperty('cursor', 'default');
+      this.div_header.style.setProperty('cursor', 'default');
+    } else {
+      this.button_lock.textContent = 'O';
+      this.div_content.style.setProperty('cursor', 'default');
+      this.div_header.style.setProperty('cursor', 'move');
     }
   }
 }

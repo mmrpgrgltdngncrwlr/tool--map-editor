@@ -17,6 +17,7 @@ div.floating-panel > div#panel-header {
   height: 2rem;
   justify-content: space-between;
   padding-left: 0.5em;
+  gap: 1px;
 }
 div.floating-panel > div#panel-header * {
   cursor: initial;
@@ -37,6 +38,10 @@ div.floating-panel > div#panel-header > button {
 div.floating-panel > div#panel-header > button:hover {
   background: gray;
 }
+div.floating-panel > div#panel-header > button#lock-panel {
+  margin-left: auto;
+}
+
 div.floating-panel > div#panel-content {
   background-color: lightgray;
   cursor: move;
